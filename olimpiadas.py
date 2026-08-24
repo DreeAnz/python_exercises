@@ -8,11 +8,11 @@ class Participante:
 
     def __eq__(self,other: object)->bool:
         if isinstance(other,Participante):
-            return self.nombre==other.nombre, self.pais==other.pais
+            return self.nombre==other.nombre and self.pais==other.pais
         return False
 
     def __hash__(self)->int:
-        return hash(self.nombre,self.pais)
+        return hash((self.nombre,self.pais))
 
 
 class Olimpiadas:
@@ -74,11 +74,11 @@ class Olimpiadas:
                 print("Es necesario tener minimo 3 participantes por evento")
                 return
             else:
-                participante_evento = random.sample(list(self.participantes.items(),3))   #Escoge a tres participantes aleatorios
+                participante_evento = random.sample(self.participantes[evento], 3)   #Escoge a tres participantes aleatorios
                 random.shuffle(participante_evento)     #reordena los participantes
 
             oro,plata,bronce = participante_evento
-            self.eventos_resultados = [oro,plata,bronce]
+            self.eventos_resultados[evento] = [oro,plata,bronce] # aqui es necesario asignar al evento actual, porque si no, se reescribe como una lista
 
             self.actualizar_resultados_pais(oro.pais,"oro")
             self.actualizar_resultados_pais(plata.pais, "plata")
@@ -102,7 +102,7 @@ class Olimpiadas:
 
             print("INFORME DE RESULTADOS POR EVENTO")
 
-            for evento, ganadores in self.eventos_resultados.items():
+            for evento, ganadores in self.eventos_resultados.items():           #items es para traer algo especifico de un diccionario
                 print(f"Evento: {evento}")
                 print(f"Resultados del evento {evento}")
                 print(f"Oro: {ganadores[0].nombre} ({ganadores[0].pais})")
@@ -133,6 +133,7 @@ olimpiadas = Olimpiadas()
 opcion=0
 while(opcion != 5):
 
+    print("")
     print("---- SIMULADOR DE OLIMPIADAS ----")
     print("1. Registrar evento")
     print("2. Registrar participante")
